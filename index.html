@@ -48,11 +48,12 @@
 
 <body>
 
-    
+
 
 
 
     <div id="app">
+       
 
         <div id="recent">
             <div v-for="person in persons">
@@ -68,10 +69,21 @@
 
 
     <script>
-        var a = $.get("http://localhost:3000/list", function (result) {
-            console.log(111);
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = state_Change;
+        xmlhttp.open("GET", 'http://localhost:3000/list', true);
+        xmlhttp.send(null);
 
-        });
+        function state_Change() {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    alert(xmlhttp.response);
+                }
+                else {
+                    alert("出错");
+                }
+            }
+        }
 
     </script>
 
@@ -86,10 +98,10 @@
             },
             mounted() {
                 var that = this;
-                axios.get('http://localhost:3000/list').then(function (response) {
-                    console.log(response);
-                    that.persons = response.data;
-                });
+                // axios.get('http://localhost:3000/list').then(function (response) {
+                //     console.log(response);
+                //     that.persons = response.data;
+                // });
             }
         })
 
