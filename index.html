@@ -7,68 +7,73 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
     <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 
-    <title>动态页</title>
+    <title>document</title>
     <style>
-    
-        *{
+        /* * {
             margin: 0;
             padding: 0;
         }
-        html,body{
+
+        html,
+        body {
             max-width: 375px;
             margin: 0 auto;
-        }
+        } */
 
-        .head{
+        .head {
             height: 200px;
             background-size: 100% auto;
             background-image: url(img/top_headv3.png);
             background-repeat: no-repeat;
         }
 
-        #recent{
+        /* #recent {
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .card{
+        .card {
             width: 23%;
             height: 80px;
             background-color: aliceblue;
             text-align: center;
             padding-top: 10px;
 
-        }
-    
-    
+        } */
     </style>
 </head>
 
 <body>
 
-    <div class="head">
-
-
-    </div>
+    
 
 
 
     <div id="app">
 
         <div id="recent">
-            <div class="card">新增{{chinaTotal.confirm}}</div>
-            <div class="card">疑似{{chinaTotal.suspect}}</div>
-            <div class="card">置于{{chinaTotal.heal}}</div>
-            <div class="card">死亡{{chinaTotal.dead}}</div>
+            <div v-for="person in persons">
+                {{ person.name }}
+            </div>
         </div>
 
 
-        <div v-for="country in areaTree">
-            {{ country.name }}
-        </div>
+
     </div>
+
+
+
+
+    <script>
+        var a = $.get("http://localhost:3000/list", function (result) {
+            console.log(111);
+
+        });
+
+    </script>
 
 
     <script>
@@ -76,19 +81,14 @@
             el: '#app',
             data() {
                 return {
-                    data: null,
-                    areaTree: null,
-                    chinaTotal: null,
-                    chinaAdd: null,
-                    lastUpdateTime: null
+                    persons: null
                 }
             },
             mounted() {
                 var that = this;
-                axios.get('db.json').then(function (response) {
-                    that.areaTree = response.data.areaTree;
-                    that.chinaTotal = response.data.chinaTotal;
-
+                axios.get('http://localhost:3000/list').then(function (response) {
+                    console.log(response);
+                    that.persons = response.data;
                 });
             }
         })
