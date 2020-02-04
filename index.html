@@ -43,6 +43,24 @@
             padding-top: 10px;
 
         } */
+
+        /* .user{
+            height: 25px;
+            line-height: 25px;
+        } */
+
+        .user{
+            height: 100px;
+            line-height: 100px;
+            box-sizing: border-box;
+        }
+        .user:nth-child(odd){
+            background-color: #eee;
+        }
+
+        img{
+            border-radius: 50%;
+        } 
     </style>
 </head>
 
@@ -53,11 +71,25 @@
 
 
     <div id="app">
-       
+
+        <input type="text" v-model="name">
+        <button @click="add(name)">添加</button>
+
+        <br>
+        <br>
+
+
+        <input type="text" v-model="id">
+        <button @click="del(id)">del</button>
+
+        <br>
+        <br>
+
 
         <div id="recent">
-            <div v-for="person in persons">
-                {{ person.name }}
+            <div class="user" v-for="person in persons">
+                {{person.id +" "+ person.name }}
+                <img :src="person.img" :alt="person.name">
             </div>
         </div>
 
@@ -68,40 +100,56 @@
 
 
 
-    <script>
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = state_Change;
-        xmlhttp.open("GET", 'http://localhost:3000/list', true);
-        xmlhttp.send(null);
-
-        function state_Change() {
-            if (xmlhttp.readyState == 4) {
-                if (xmlhttp.status == 200) {
-                    alert(xmlhttp.response);
-                }
-                else {
-                    alert("出错");
-                }
-            }
-        }
-
-    </script>
 
 
     <script>
         new Vue({
             el: '#app',
-            data() {
-                return {
-                    persons: null
-                }
+            data: {
+                persons: null,
+                name: null,
+                id:null
             },
             mounted() {
-                var that = this;
-                // axios.get('http://localhost:3000/list').then(function (response) {
-                //     console.log(response);
-                //     that.persons = response.data;
-                // });
+                this.getInfo();
+            },
+            methods: {
+                getInfo() {
+                    var that = this;
+                    axios.get('http://localhost:3000/user').then(function (response) {
+                        console.log(response);
+                        that.persons = response.data;
+                    });
+
+                },
+                add(name) {
+                    var that = this;
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:3000/user',
+                        data: {
+                            name: name
+                        }
+                    }).then(function (response) {
+                        that.getInfo()
+                        that.name = ''
+                    });
+
+                },
+                del() {
+                    var that = this;
+                    var url = 'http://localhost:3000/user/' + this.id;
+                    axios({
+                        method: 'delete',
+                        url: url,
+                        data: {
+                            id: 1
+                        }
+                    }).then(function (response) {
+                        that.getInfo()
+                        that.id = ''
+                    });
+                }
             }
         })
 
